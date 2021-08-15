@@ -1,8 +1,7 @@
 class Cql {
     constructor() {
         this.labels = {
-            subscriber: 'Assinante',
-            subscriberType: 'TipoAssinante',
+            candidate: 'Candidate',
         };
         this.relationships = {
             CHARACTERIZES: 'CARACTERIZA',
@@ -11,20 +10,29 @@ class Cql {
     }
 
     createConstraints() {
-        const { subscriber, subscriberType } = this.labels;
+        const { candidate } = this.labels;
         return [
-            `CREATE CONSTRAINT ON (tipoAssinante:${subscriberType}) ASSERT (tipoAssinatura.id) IS UNIQUE`,
-            `CREATE CONSTRAINT ON (assinante:${subscriber}) ASSERT (assinante.cpf) IS UNIQUE`,
-            `CREATE CONSTRAINT ON (assinante:${subscriber}) ASSERT (assinante.id) IS UNIQUE`,
+            `CREATE CONSTRAINT ON (cand:${candidate}) ASSERT (cand.id) IS UNIQUE`,
         ];
     }
 
-    getOneUser({ id }) {
-        this.labels;
+    createCandidate(name) {
+        const { candidate } = this.labels;
         return {
             cypher: `
-            MATCH (u:User {id: $id})
-            RETURN u
+            MERGE (cand:${candidate} {id: apoc.create.uuid(), name: $name})
+            RETURN cand
+            `,
+            params: { name }
+        }
+    }
+
+    userById(id) {
+        const { candidate } = this.labels;
+        return {
+            cypher: `
+            match (cand:${candidate} {id: $id})
+            RETURN cand
           `,
             params: { id },
         };

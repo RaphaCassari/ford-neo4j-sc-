@@ -1,21 +1,11 @@
-/* const { Router } = require('express');
-const MainController = require('../../controllers/mainController');
+/* const express = require('express'),
+    router = express.Router(),
+    Maincontroller = require('../../controllers/mainController'),
+    mainController = new Maincontroller()
 
-const routes = Router();
-const mainController = new MainController();
+router.get('/', mainController.get);
+router.post('/:id', mainController.post);
+router.put('/:id', mainController.put);
+router.delete('/:id', mainController.del);
 
-routes.get('/user', mainController.user);
-
-module.exports = routes; */
-
-const express = require('express');
-const router = express.Router();
-const controller = require('../../controllers/mainController')
-
-router.get('/', controller.get);
-
-
-router.post('/', controller.post);
-router.put('/:id', controller.put);
-router.delete('/:id', controller.delete);
-module.exports = router;
+module.exports = router; */
