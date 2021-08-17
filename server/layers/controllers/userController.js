@@ -13,13 +13,13 @@ class UserController {
     }
 
     async createCandidate(req, res) {
-        // const { name } = req.body
-        console.log(req)
-            //console.log(name)
-            //const { cypher, params } = cql.createCandidate(name);
-            //const [candidate] = await db.execute({ cypher, params });
-            //return res.json(candidate);
-        return res.json("sucess")
+        //const { name } = req.body
+        //console.log(req.body)
+        //console.log(name)
+        const { cypher } = cql.createCandidate();
+        const [candidate] = await db.execute({ cypher });
+        return res.json(candidate.id);
+        //return res.json("sucess")
     }
 }
 
