@@ -57,10 +57,11 @@
 </template>
 
 <script>
-import { apiCourses } from "../axios";
+//import { apiCourses } from "../axios";
+import axios from "axios";
 export default {
   data: () => ({
-    items: ["Html", "Css", "Javascipt", "Typescript"],
+    items: [],
     values: ["foo", "bar"],
     value: null,
 
@@ -78,8 +79,19 @@ export default {
     ],
   }),
   async created() {
-    let course = await apiCourses.get();
-    console.log(course);
+    //let course = await apiCourses.get();
+    //console.log(course);
+    axios
+      .get("http://localhost:3000/course")
+      .then((res) => {
+        this.items = res.data.map((c) => ({
+          value: c.n.id,
+          text: c.n.name,
+        }));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>

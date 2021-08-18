@@ -9,6 +9,7 @@ const courseRoute = require('./course.routes');
 const express = require('express');
 const router = express.Router();
 
+
 router.use('/user', userRoute);
 router.use('/course', courseRoute)
 router.get('/', function(req, res, next) {
