@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import { apiCourses } from "../axios";
 export default {
   data: () => ({
     items: ["Html", "Css", "Javascipt", "Typescript"],
@@ -76,5 +77,9 @@ export default {
       (v) => /.+@.+/.test(v) || "E-mail must be valid",
     ],
   }),
+  async created() {
+    let course = await apiCourses.get();
+    console.log(course);
+  },
 };
 </script>

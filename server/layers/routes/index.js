@@ -5,10 +5,12 @@ if (express().get('env') === 'development') {
 }
 */
 const userRoute = require('./user/user.routes');
+const courseRoute = require('./course.routes');
 const express = require('express');
 const router = express.Router();
 
 router.use('/user', userRoute);
+router.use('/course', courseRoute)
 router.get('/', function(req, res, next) {
     res.status(200).send({
         title: "Node Express API",
