@@ -1,5 +1,8 @@
 <template>
   <v-container fluid>
+    <v-alert v-model="alert" dismissible type="success">
+      Candidato Cadastrado com Sucesso
+    </v-alert>
     <v-card>
       <v-container fluid>
         <v-form v-model="valid">
@@ -47,7 +50,7 @@
           </v-col>
         </v-row>
         <v-row align="center" justify="space-around">
-          <v-btn @click="submit" depressed> ENVIAR </v-btn>
+          <v-btn @click="s2" depressed> ENVIAR </v-btn>
         </v-row>
       </v-container>
     </v-card>
@@ -62,7 +65,7 @@ export default {
     items: [],
     values: [],
     value: null,
-
+    alert: false,
     valid: false,
     name: "",
     cpf: "",
@@ -77,14 +80,18 @@ export default {
     ],
   }),
   methods: {
+    s2() {
+      this.alert = true;
+    },
     async submit() {
       let request = {
         name: this.name,
         cpf: this.cpf,
-        courses: this.items,
+        email: this.email,
+        courses: this.values,
       };
-      await apiCand.create({ request });
-      console.log(this.values);
+      let res = await apiCand.create({ request });
+      console.log(res);
     },
   },
   async created() {
