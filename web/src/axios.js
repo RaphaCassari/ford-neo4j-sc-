@@ -24,7 +24,7 @@ export const apiCand = {
     create: async({ request }) => {
         try {
             const response = await api.post(
-                `${HEROKU_URL}}/user/create`,
+                `${HEROKU_URL}/user/create`,
                 request
             )
             return response.data;
