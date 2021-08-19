@@ -1,12 +1,14 @@
 import axios from "axios";
 
-const api = axios.create({});
+const api = axios.create({}),
+    HEROKU_URL = "https://api-shopping-cidadao-2.herokuapp.com"
+    //LOCAL_URL = "http://localhost:3000"
 
 export const apiCourses = {
     get: async() => {
         try {
             const response = await api.get(
-                `http://localhost:3000/course`
+                `${HEROKU_URL}/course`
             )
             return response.data.map((c) => ({
                 value: c.n.id,
