@@ -14,4 +14,4 @@ jobs:
         with:
           access-token: ${{ secrets.ACCESS_TOKEN }}
           source-directory: web
-          build-command: yarn build
+          build-command: npm run build
