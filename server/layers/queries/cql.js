@@ -11,21 +11,25 @@ class Cql {
     }
 
     createConstraints() {
-        const { candidate } = this.labels;
+        const { candidate, course } = this.labels;
         return [
             `CREATE CONSTRAINT ON (cand:${candidate}) ASSERT (cand.cpf) IS UNIQUE
             CREATE CONSTRAINT ON (c:${course}) ASSERT (c.id) IS UNIQUE`,
         ];
     }
 
-    createCandidate(name, cpf, email) {
-        const { candidate } = this.labels;
+    createCandidate(name, cpf, email, courses) {
+        const { candidate, course } = this.labels;
         return {
             cypher: `
             CREATE (cand:${candidate} {cpf: $cpf, name: $name, email: $email})
-            RETURN cand
+            WITH cand
+            UNWIND $courses as courseId
+            MATCH (c:${course} {id: courseId})
+            CREATE (cand) - [:KNOW] -> (c)
+            RETURN *
             `,
-            params: { name, cpf, email }
+            params: { name, cpf, email, courses }
         }
     }
 

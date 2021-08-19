@@ -1,15 +1,33 @@
 import axios from "axios";
 
-const api = axios.create({
-    baseURL: "",
-});
+const api = axios.create({});
 
 export const apiCourses = {
     get: async() => {
-        const response = await api.get(
-            `localhost:3000/course/`
-        );
-        console.log(response)
-        return response.data;
+        try {
+            const response = await api.get(
+                `http://localhost:3000/course`
+            )
+            return response.data.map((c) => ({
+                value: c.n.id,
+                text: c.n.name,
+            }));
+        } catch (error) {
+            return error
+        }
+    },
+};
+
+export const apiCand = {
+    create: async({ request }) => {
+        try {
+            const response = await api.post(
+                `http://localhost:3000/user/create`,
+                request
+            )
+            return response.data;
+        } catch (error) {
+            return error
+        }
     },
 };

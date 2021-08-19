@@ -6,9 +6,8 @@
           <v-row>
             <v-col cols="12" md="4">
               <v-text-field
-                v-model="firstname"
+                v-model="name"
                 :rules="nameRules"
-                :counter="10"
                 label="Nome"
                 required
               ></v-text-field>
@@ -16,10 +15,9 @@
 
             <v-col cols="12" md="4">
               <v-text-field
-                v-model="lastname"
-                :rules="nameRules"
-                :counter="11"
+                v-model="cpf"
                 label="CPF"
+                v-mask="'###.###.###-##'"
                 required
               ></v-text-field>
             </v-col>
@@ -49,7 +47,7 @@
           </v-col>
         </v-row>
         <v-row align="center" justify="space-around">
-          <v-btn depressed> ENVIAR </v-btn>
+          <v-btn @click="submit" depressed> ENVIAR </v-btn>
         </v-row>
       </v-container>
     </v-card>
@@ -57,20 +55,20 @@
 </template>
 
 <script>
-//import { apiCourses } from "../axios";
-import axios from "axios";
+import { apiCourses, apiCand } from "../axios";
+//import axios from "axios";
 export default {
   data: () => ({
     items: [],
-    values: ["foo", "bar"],
+    values: [],
     value: null,
 
     valid: false,
-    firstname: "",
-    lastname: "",
+    name: "",
+    cpf: "",
     nameRules: [
       (v) => !!v || "Name is required",
-      (v) => v.length <= 10 || "Name must be less than 10 characters",
+      //(v) => v.length <= 10 || "Name must be less than 10 characters",
     ],
     email: "",
     emailRules: [
@@ -78,20 +76,19 @@ export default {
       (v) => /.+@.+/.test(v) || "E-mail must be valid",
     ],
   }),
+  methods: {
+    async submit() {
+      let request = {
+        name: this.name,
+        cpf: this.cpf,
+        courses: this.items,
+      };
+      await apiCand.create({ request });
+      console.log(this.values);
+    },
+  },
   async created() {
-    //let course = await apiCourses.get();
-    //console.log(course);
-    axios
-      .get("http://localhost:3000/course")
-      .then((res) => {
-        this.items = res.data.map((c) => ({
-          value: c.n.id,
-          text: c.n.name,
-        }));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    this.items = await apiCourses.get();
   },
 };
 </script>
