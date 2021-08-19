@@ -2,7 +2,7 @@ const express = require('express'),
     app = express(),
     routes = require('./layers/routes/index'),
     cors = require('cors'),
-    port = '3000';
+    port = process.env.PORT || '3000';
 
 // Para interpretar o require
 app.use(express.json())

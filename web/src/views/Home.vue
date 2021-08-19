@@ -11,6 +11,7 @@
               <v-text-field
                 v-model="name"
                 :rules="nameRules"
+                :counter="50"
                 label="Nome"
                 required
               ></v-text-field>
@@ -50,7 +51,7 @@
           </v-col>
         </v-row>
         <v-row align="center" justify="space-around">
-          <v-btn @click="s2" depressed> ENVIAR </v-btn>
+          <v-btn @click="submit" :disabled="formIsInvalid" depressed> ENVIAR </v-btn>
         </v-row>
       </v-container>
     </v-card>
@@ -70,19 +71,21 @@ export default {
     name: "",
     cpf: "",
     nameRules: [
-      (v) => !!v || "Name is required",
-      //(v) => v.length <= 10 || "Name must be less than 10 characters",
+      (v) => !!v || "Nome é obrigatorio",
+      (v) => v.length <= 50 || "O limite maximo de caracteres é 50",
+      (v) =>
+        /^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(v) || "Caracteres invalidos",
     ],
     email: "",
     emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+/.test(v) || "E-mail must be valid",
+      (v) => !!v || "E-mail é obrigatorio",
+      (v) =>
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+          v
+        ) || "Digite um  E-mail válido",
     ],
   }),
   methods: {
-    s2() {
-      this.alert = true;
-    },
     async submit() {
       let request = {
         name: this.name,
@@ -91,11 +94,18 @@ export default {
         courses: this.values,
       };
       let res = await apiCand.create({ request });
+      this.alert = true;
       console.log(res);
     },
   },
   async created() {
     this.items = await apiCourses.get();
+  },
+  computed: {
+    formIsInvalid() {
+      if (this.name && this.email && this.cpf) return false;
+      return true;
+    },
   },
 };
 </script>
