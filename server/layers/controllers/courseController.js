@@ -5,17 +5,16 @@ const db = require('../database/qneo4j');
 //const fakeData = require('../utils/fakeData')
 
 class CourseController {
-
-    async createManyCourse(req, res) {
-        const { names } = req.body
-        const { cypher, params } = cql.createManyCourse(names);
-        const courses = await db.execute({ cypher, params });
+    async get(req, res) {
+        const { cypher } = cql.getCourses()
+        const courses = await db.execute({ cypher });
         return res.json(courses);
     }
 
-    async getCourses(req, res) {
-        const { cypher } = cql.getCourses()
-        const courses = await db.execute({ cypher });
+    async createMany(req, res) {
+        const { names } = req.body
+        const { cypher, params } = cql.createManyCourse(names);
+        const courses = await db.execute({ cypher, params });
         return res.json(courses);
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <div>
     <v-alert v-model="alert" dismissible type="success">
       Candidato Cadastrado com Sucesso
     </v-alert>
@@ -37,7 +37,7 @@
           </v-row>
         </v-form>
         <v-row align="center">
-          <v-col cols="12">
+          <v-col cols="6">
             <v-autocomplete
               v-model="values"
               :items="items"
@@ -50,18 +50,18 @@
             ></v-autocomplete>
           </v-col>
         </v-row>
-        <v-row align="center" justify="space-around">
-          <v-btn @click="submit" :disabled="formIsInvalid" depressed> ENVIAR </v-btn>
-        </v-row>
+        <v-row align="center" justify="space-around"> </v-row>
       </v-container>
     </v-card>
-  </v-container>
+    <v-btn @click="submit" :disabled="formIsInvalid" depressed> ENVIAR </v-btn>
+  </div>
 </template>
 
 <script>
-import { apiCourses, apiCand } from "../axios";
+import { apiCourses /* apiCand */ } from "../axios";
 //import axios from "axios";
 export default {
+  name: "Form",
   data: () => ({
     items: [],
     values: [],
@@ -91,11 +91,12 @@ export default {
         name: this.name,
         cpf: this.cpf,
         email: this.email,
+        type: "Candidato",
         courses: this.values,
       };
-      let res = await apiCand.create({ request });
+      //let res = await apiCand.create({ request });
       this.alert = true;
-      console.log(res);
+      console.log(request);
     },
   },
   async created() {

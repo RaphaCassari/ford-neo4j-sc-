@@ -5,20 +5,18 @@ const db = require('../database/qneo4j');
 const fakeData = require('../utils/fakeData')
 
 class UserController {
-    async userById(req, res) {
-        //const { id } = req.body;
-        let id = req.params.id;
-        const { cypher, params } = cql.userById(id);
-        const [user] = await db.execute({ cypher, params });
+    async get(req, res) {
+        const { cypher } = cql.getUsers();
+        const user = await db.execute({ cypher });
         return res.json(user);
     }
 
-    async createCandidate(req, res) {
-        const { name, cpf, email, courses } = req.body
+    async create(req, res) {
+        const { name, cpf, email, type, courses } = req.body
             //const { name, cpf, email } = fakeData.CandidateFake()
-        const { cypher, params } = cql.createCandidate(name, cpf, email, courses);
-        const candidate = await db.execute({ cypher, params });
-        return res.json(candidate);
+        const { cypher, params } = cql.createUser(name, cpf, email, type, courses);
+        const user = await db.execute({ cypher, params });
+        return res.json(user);
     }
 }
 

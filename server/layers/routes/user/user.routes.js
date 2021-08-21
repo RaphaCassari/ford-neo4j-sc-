@@ -3,7 +3,7 @@ const express = require('express'),
     Usercontroller = require('../../controllers/userController'),
     userController = new Usercontroller()
 
-router.post('/', userController.userById);
-router.post('/create', userController.createCandidate)
+router.get('/', userController.get);
+router.post('/create', userController.create)
 
 module.exports = router;

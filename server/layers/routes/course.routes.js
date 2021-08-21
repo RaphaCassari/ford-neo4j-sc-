@@ -3,7 +3,7 @@ const express = require('express'),
     Usercontroller = require('../controllers/courseController'),
     userController = new Usercontroller()
 
-router.get('/', userController.getCourses)
-router.post('/createMany', userController.createManyCourse)
+router.get('/', userController.get)
+router.post('/createMany', userController.createMany)
 
 module.exports = router;

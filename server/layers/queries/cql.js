@@ -1,7 +1,7 @@
 class Cql {
     constructor() {
         this.labels = {
-            candidate: 'Candidate',
+            user: 'User',
             course: 'Course'
         };
         this.relationships = {
@@ -11,25 +11,25 @@ class Cql {
     }
 
     createConstraints() {
-        const { candidate, course } = this.labels;
+        const { user, course } = this.labels;
         return [
-            `CREATE CONSTRAINT ON (cand:${candidate}) ASSERT (cand.cpf) IS UNIQUE
+            `CREATE CONSTRAINT ON (user:${user}) ASSERT (user.cpf) IS UNIQUE
             CREATE CONSTRAINT ON (c:${course}) ASSERT (c.id) IS UNIQUE`,
         ];
     }
 
-    createCandidate(name, cpf, email, courses) {
-        const { candidate, course } = this.labels;
+    createUser(name, cpf, email, type, courses) {
+        const { user, course } = this.labels;
         return {
             cypher: `
-            CREATE (cand:${candidate} {cpf: $cpf, name: $name, email: $email})
-            WITH cand
+            CREATE (user:${user} {cpf: $cpf, name: $name, email: $email, type: $type})
+            WITH user
             UNWIND $courses as courseId
             MATCH (c:${course} {id: courseId})
-            CREATE (cand) - [:KNOW] -> (c)
+            CREATE (user) - [:KNOW] -> (c)
             RETURN *
             `,
-            params: { name, cpf, email, courses }
+            params: { name, cpf, email, type, courses }
         }
     }
 
@@ -63,14 +63,13 @@ class Cql {
         }
     }
 
-    userById(id) {
-        const { candidate } = this.labels;
+    getUsers() {
+        //const { user } = this.labels;
         return {
             cypher: `
-            match (cand:${candidate} {id: $id})
-            RETURN cand
+            match (user:User) - [:KNOW] -> (courses:Course)
+            RETURN user,count(courses) as courses
           `,
-            params: { id },
         };
     }
 }
