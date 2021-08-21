@@ -54,12 +54,12 @@ class Cql {
         }
     }
 
-    getCourses() {
-        const { course } = this.labels
+    getLabel(label) {
         return {
             cypher: `
-            MATCH (n:${course})
+            MATCH (n: $label)
             RETURN n`,
+            params: { label }
         }
     }
 

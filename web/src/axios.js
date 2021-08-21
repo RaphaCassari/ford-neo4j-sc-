@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({}),
-    //BASE_URL = "https://api-shopping-cidadao-2.herokuapp.com"
-    BASE_URL = "http://localhost:3000"
+    BASE_URL = "https://api-shopping-cidadao-2.herokuapp.com"
+    //BASE_URL = "http://localhost:3000"
 
 export const apiCourses = {
     get: async() => {

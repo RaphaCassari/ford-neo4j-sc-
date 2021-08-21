@@ -40,6 +40,18 @@
           <v-col cols="6">
             <v-autocomplete
               v-model="values"
+              :items="cursos"
+              outlined
+              dense
+              chips
+              small-chips
+              label="Cursos"
+              multiple
+            ></v-autocomplete>
+          </v-col>
+          <v-col cols="6">
+            <v-autocomplete
+              v-model="values"
               :items="items"
               outlined
               dense
@@ -63,7 +75,8 @@ import { apiCourses /* apiCand */ } from "../axios";
 export default {
   name: "Form",
   data: () => ({
-    items: [],
+    cursos: [],
+    languages: [],
     values: [],
     value: null,
     alert: false,
@@ -100,7 +113,8 @@ export default {
     },
   },
   async created() {
-    this.items = await apiCourses.get();
+    this.cursos = await apiCourses.get();
+    this.languages = await apiCourses.get();
   },
   computed: {
     formIsInvalid() {
