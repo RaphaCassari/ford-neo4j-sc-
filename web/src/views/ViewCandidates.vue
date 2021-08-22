@@ -62,23 +62,10 @@ export default {
       },
       { text: "Tipo", value: "type" },
       { text: "Qtd. Cursos", value: "courses" },
+      { text: "Qtd. Idiomas", value: "languages" },
     ],
     usersData: [],
     editedIndex: -1,
-    editedItem: {
-      name: "",
-      cursos: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
-    defaultItem: {
-      name: "",
-      cursos: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
   }),
 
   computed: {
@@ -100,18 +87,6 @@ export default {
   },
 
   methods: {
-    async initialize() {
-      /*
-      this.usersData = await apiCand.get();
-      console.log(usersData);
-           [
-        {
-          name: "Frozen Yogurt",
-          cursos: 159,
-        },
-      ]; */
-    },
-
     editItem(item) {
       this.editedIndex = this.usersData.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -126,10 +101,6 @@ export default {
 
     close() {
       this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
     },
 
     save() {

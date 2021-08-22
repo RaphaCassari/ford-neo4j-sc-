@@ -39,8 +39,8 @@
         <v-row align="center">
           <v-col cols="6">
             <v-autocomplete
-              v-model="values"
-              :items="cursos"
+              v-model="coursesId"
+              :items="courses"
               outlined
               dense
               chips
@@ -51,13 +51,13 @@
           </v-col>
           <v-col cols="6">
             <v-autocomplete
-              v-model="values"
-              :items="items"
+              v-model="languagesId"
+              :items="languages"
               outlined
               dense
               chips
               small-chips
-              label="Cursos"
+              label="Idiomas"
               multiple
             ></v-autocomplete>
           </v-col>
@@ -70,14 +70,15 @@
 </template>
 
 <script>
-import { apiCourses /* apiCand */ } from "../axios";
+import { apiCand, apiMain } from "../axios";
 //import axios from "axios";
 export default {
   name: "Form",
   data: () => ({
-    cursos: [],
+    courses: [],
     languages: [],
-    values: [],
+    coursesId: [],
+    languagesId: [],
     value: null,
     alert: false,
     valid: false,
@@ -105,16 +106,17 @@ export default {
         cpf: this.cpf,
         email: this.email,
         type: "Candidato",
-        courses: this.values,
+        courses: this.coursesId,
+        languages: this.languagesId,
       };
-      //let res = await apiCand.create({ request });
+      let res = await apiCand.create({ request });
       this.alert = true;
-      console.log(request);
+      console.log(res);
     },
   },
   async created() {
-    this.cursos = await apiCourses.get();
-    this.languages = await apiCourses.get();
+    this.courses = await apiMain.get({ labelName: "Course" });
+    this.languages = await apiMain.get({ labelName: "Language" });
   },
   computed: {
     formIsInvalid() {

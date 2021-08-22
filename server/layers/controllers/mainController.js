@@ -1,4 +1,14 @@
+const cql = require('../queries/cql');
+const db = require('../database/qneo4j');
 class MainController {
+    async getLabel(req, res) {
+        const { labelName } = req.body
+        let { cypher } = cql.getLabel()
+        cypher = cypher.replace('$labelName', labelName)
+        const label = await db.execute({ cypher });
+        return res.json(label);
+    }
+
     async get(req, res) {
         res.status(201).send('Requisição GET recebida com sucesso!');
     }

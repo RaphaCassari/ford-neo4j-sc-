@@ -1,36 +1,54 @@
 import axios from "axios";
 
 const api = axios.create({}),
-    BASE_URL = "https://api-shopping-cidadao-2.herokuapp.com"
-    //BASE_URL = "http://localhost:3000"
+    //BASE_URL = "https://api-shopping-cidadao-2.herokuapp.com"
+    BASE_URL = "http://localhost:3000"
+
+export const apiMain = {
+    get: async(request) => {
+        console.log(request)
+        try {
+            const response = await api.post(
+                `${BASE_URL}/getLabel`,
+                request
+            )
+            return response.data.map((c) => ({
+                value: c.n.id,
+                text: c.n.name,
+            }));
+        } catch (error) {
+            return error
+        }
+    },
+};
 
 export const apiCourses = {
-    get: async() => {
-        try {
-            const response = await api.get(
-                `${BASE_URL}/course`
-            )
-            return response.data.map((c) => ({
-                value: c.n.id,
-                text: c.n.name,
-            }));
-        } catch (error) {
-            return error
-        }
-    },
-    getLanguages: async() => {
-        try {
-            const response = await api.get(
-                `${BASE_URL}/course/languages`
-            )
-            return response.data.map((c) => ({
-                value: c.n.id,
-                text: c.n.name,
-            }));
-        } catch (error) {
-            return error
-        }
-    },
+    /*     get: async() => {
+            try {
+                const response = await api.get(
+                    `${BASE_URL}/course`
+                )
+                return response.data.map((c) => ({
+                    value: c.n.id,
+                    text: c.n.name,
+                }));
+            } catch (error) {
+                return error
+            }
+        }, */
+    /*     getLanguages: async() => {
+            try {
+                const response = await api.get(
+                    `${BASE_URL}/course/languages`
+                )
+                return response.data.map((c) => ({
+                    value: c.n.id,
+                    text: c.n.name,
+                }));
+            } catch (error) {
+                return error
+            }
+        }, */
 };
 
 
@@ -43,7 +61,8 @@ export const apiCand = {
             return response.data.map((c) => ({
                 name: c.user.name,
                 type: c.user.type,
-                courses: c.courses
+                courses: c.courses,
+                languages: c.languages
             }));
         } catch (error) {
             return error

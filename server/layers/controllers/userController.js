@@ -12,9 +12,9 @@ class UserController {
     }
 
     async create(req, res) {
-        const { name, cpf, email, type, courses } = req.body
+        const { name, cpf, email, type, courses, languages } = req.body
             //const { name, cpf, email } = fakeData.CandidateFake()
-        const { cypher, params } = cql.createUser(name, cpf, email, type, courses);
+        const { cypher, params } = cql.createUser(name, cpf, email, type, courses, languages);
         const user = await db.execute({ cypher, params });
         return res.json(user);
     }

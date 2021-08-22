@@ -18,18 +18,22 @@ class Cql {
         ];
     }
 
-    createUser(name, cpf, email, type, courses) {
-        const { user, course } = this.labels;
+    createUser(name, cpf, email, type, courses, languages) {
+        console.log(languages)
         return {
             cypher: `
-            CREATE (user:${user} {cpf: $cpf, name: $name, email: $email, type: $type})
+            CREATE (user:User {cpf: $cpf, name: $name, email: $email, type: $type})
             WITH user
             UNWIND $courses as courseId
-            MATCH (c:${course} {id: courseId})
+            MATCH (c:Course {id: courseId})
             CREATE (user) - [:KNOW] -> (c)
+            WITH user LIMIT 1
+            UNWIND $languages as languageId
+            MATCH (l:Language {id: languageId})
+            CREATE (user) - [:SPEAK] -> (l)
             RETURN *
             `,
-            params: { name, cpf, email, type, courses }
+            params: { name, cpf, email, type, courses, languages }
         }
     }
 
@@ -54,21 +58,21 @@ class Cql {
         }
     }
 
-    getLabel(label) {
+    getLabel() {
         return {
             cypher: `
-            MATCH (n: $label)
+            MATCH (n: $labelName)
             RETURN n`,
-            params: { label }
         }
     }
 
     getUsers() {
-        //const { user } = this.labels;
         return {
             cypher: `
-            match (user:User) - [:KNOW] -> (courses:Course)
-            RETURN user,count(courses) as courses
+            MATCH (user:User) - [:KNOW] -> (courses:Course)
+            WITH user, count(courses) as courses
+            MATCH (user) - [:SPEAK] -> (languages:Language)
+            RETURN user, courses, count(languages) as languages
           `,
         };
     }
