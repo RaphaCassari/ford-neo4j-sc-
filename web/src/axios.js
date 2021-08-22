@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({}),
-    BASE_URL = "https://api-shopping-cidadao-2.herokuapp.com"
-    //BASE_URL = "http://localhost:3000"
+    //BASE_URL = "https://api-shopping-cidadao-2.herokuapp.com"
+    BASE_URL = "http://localhost:3000"
 
 export const apiMain = {
     get: async(request) => {
@@ -46,6 +46,7 @@ export const apiCand = {
             return response.data.map((c) => ({
                 name: c.user.name,
                 type: c.user.type,
+                score: c.user.score,
                 courses: c.courses,
                 languages: c.languages
             }));

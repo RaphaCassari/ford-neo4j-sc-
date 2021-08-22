@@ -76,6 +76,22 @@ class Cql {
           `,
         };
     }
+
+    query() {
+        return {
+            cypher: `
+            match (n:User {type:"Candidato"})
+            with collect(n) as users                  
+            unwind  users as user  
+            
+            
+
+
+            set  user.score = 5                        
+            return * 
+            `
+        }
+    }
 }
 
 module.exports = new Cql();

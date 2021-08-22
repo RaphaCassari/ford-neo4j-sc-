@@ -63,6 +63,7 @@ export default {
       { text: "Tipo", value: "type" },
       { text: "Qtd. Cursos", value: "courses" },
       { text: "Qtd. Idiomas", value: "languages" },
+      { text: "Pontuação", value: "score" },
     ],
     usersData: [],
     editedIndex: -1,
@@ -70,7 +71,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "Novo Usuario" : "Editar Usuario";
     },
   },
 
