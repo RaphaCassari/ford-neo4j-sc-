@@ -16,7 +16,7 @@
           </div>
 
           <div class="container-login-form-btn">
-            <button class="login-form-btn" @click="show">Login</button>
+            <button class="login-form-btn">Login</button>
           </div>
 
           <ul class="login-utils">

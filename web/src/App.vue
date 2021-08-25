@@ -92,7 +92,7 @@ body {
 }
 
 .navbar {
-  background-color: #3b5998;
+  background-color: rgb(0, 102, 197);
   overflow: hidden;
   height: 63px;
 }
