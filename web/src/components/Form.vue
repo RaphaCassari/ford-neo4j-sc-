@@ -3,105 +3,99 @@
     <v-alert v-model="alert" dismissible type="success">
       Candidato Cadastrado com Sucesso
     </v-alert>
-    <v-card>
-      <v-container fluid>
-        <v-stepper v-model="e1">
-          <v-stepper-header>
-            <v-stepper-step :complete="e1 > 1" step="1"
-              >Informações Basicas</v-stepper-step
-            >
+    <v-container fluid>
+      <v-stepper v-model="e1">
+        <v-stepper-header>
+          <v-stepper-step :complete="e1 > 1" step="1">Informações Basicas</v-stepper-step>
 
-            <v-divider></v-divider>
+          <v-divider></v-divider>
 
-            <v-stepper-step :complete="e1 > 2" step="2"
-              >Cursos e Conhecimentos</v-stepper-step
-            >
+          <v-stepper-step :complete="e1 > 2" step="2"
+            >Cursos e Conhecimentos</v-stepper-step
+          >
 
-            <v-divider></v-divider>
-          </v-stepper-header>
+          <v-divider></v-divider>
+        </v-stepper-header>
 
-          <v-stepper-items>
-            <v-stepper-content step="1">
-              <v-form v-model="valid">
-                <v-row>
-                  <v-col cols="12" md="6">
-                    <v-text-field
-                      v-model="name"
-                      :rules="nameRules"
-                      :counter="50"
-                      label="Nome"
-                      required
-                    ></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" md="6">
-                    <v-text-field
-                      v-model="cpf"
-                      label="CPF"
-                      v-mask="'###.###.###-##'"
-                      required
-                    ></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" md="6">
-                    <v-text-field
-                      v-model="email"
-                      :rules="emailRules"
-                      label="E-mail"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="6">
-                    <v-select
-                      v-model="userType"
-                      :items="userTypes"
-                      :rules="[(v) => !!v || 'Item is required']"
-                      label="Tipo"
-                      required
-                    ></v-select>
-                  </v-col>
-                </v-row>
-              </v-form>
-              <v-btn color="primary" @click="e1 = 2" :disabled="formIsInvalid">
-                Continue
-              </v-btn>
-            </v-stepper-content>
-
-            <v-stepper-content step="2">
-              <v-row align="center">
-                <v-col cols="6">
-                  <v-autocomplete
-                    v-model="coursesId"
-                    :items="courses"
-                    outlined
-                    dense
-                    chips
-                    small-chips
-                    label="Cursos"
-                    multiple
-                  ></v-autocomplete>
+        <v-stepper-items>
+          <v-stepper-content step="1">
+            <v-form v-model="valid">
+              <v-row>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="name"
+                    :rules="nameRules"
+                    :counter="50"
+                    label="Nome"
+                    required
+                  ></v-text-field>
                 </v-col>
-                <v-col cols="6">
-                  <v-autocomplete
-                    v-model="languagesId"
-                    :items="languages"
-                    outlined
-                    dense
-                    chips
-                    small-chips
-                    label="Idiomas"
-                    multiple
-                  ></v-autocomplete>
+
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="cpf"
+                    label="CPF"
+                    v-mask="'###.###.###-##'"
+                    required
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="email"
+                    :rules="emailRules"
+                    label="E-mail"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-select
+                    v-model="userType"
+                    :items="userTypes"
+                    :rules="[(v) => !!v || 'Item is required']"
+                    label="Tipo"
+                    required
+                  ></v-select>
                 </v-col>
               </v-row>
+            </v-form>
+            <v-btn @click="e1 = 2" :disabled="formIsInvalid"> Continue </v-btn>
+          </v-stepper-content>
 
-              <v-btn color="primary" @click="submit"> Enviar </v-btn>
-              <v-btn text @click="e1 = 1">Voltar</v-btn>
-            </v-stepper-content>
-          </v-stepper-items>
-        </v-stepper>
-      </v-container>
-    </v-card>
+          <v-stepper-content step="2">
+            <v-row align="center">
+              <v-col cols="6">
+                <v-autocomplete
+                  v-model="coursesId"
+                  :items="courses"
+                  outlined
+                  dense
+                  chips
+                  small-chips
+                  label="Cursos"
+                  multiple
+                ></v-autocomplete>
+              </v-col>
+              <v-col cols="6">
+                <v-autocomplete
+                  v-model="languagesId"
+                  :items="languages"
+                  outlined
+                  dense
+                  chips
+                  small-chips
+                  label="Idiomas"
+                  multiple
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+
+            <v-btn color="primary" @click="submit"> Enviar </v-btn>
+            <v-btn text @click="e1 = 1">Voltar</v-btn>
+          </v-stepper-content>
+        </v-stepper-items>
+      </v-stepper>
+    </v-container>
   </div>
 </template>
 

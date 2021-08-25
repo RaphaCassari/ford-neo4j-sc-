@@ -32,7 +32,7 @@
               </v-list-item>
             </template>
 
-            <router-link to="/"><h6>Cadastrar Candidato</h6></router-link>
+            <router-link to="/form"><h6>Cadastrar Candidato</h6></router-link>
             <router-link to="/viewCandidates"><h6>Ver Candidatos</h6></router-link>
           </v-list-group>
           <v-list-group
@@ -211,5 +211,9 @@ nav {
 }
 .botopen {
   transform: translateY(-10px) rotateZ(-45deg);
+}
+
+v-btn {
+  color: #000000;
 }
 </style>

@@ -3,13 +3,14 @@ import VueRouter from 'vue-router'
 import Form from '../components/Form.vue'
 import viewCandidates from '../views/ViewCandidates.vue'
 import Courses from '../views/Courses.vue'
+import Login from '../views/login.vue'
 
 Vue.use(VueRouter)
 
 const routes = [{
         path: '/',
-        name: 'Form',
-        component: Form
+        name: 'login',
+        component: Login
     },
     {
         path: '/about',
@@ -30,6 +31,11 @@ const routes = [{
         name: 'courses',
         component: Courses
     },
+    {
+        path: '/form',
+        name: 'Form',
+        component: Form
+    }
 ]
 
 const router = new VueRouter({

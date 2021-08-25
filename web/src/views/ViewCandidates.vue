@@ -7,31 +7,28 @@
       class="elevation-1"
     >
       <template v-slot:top>
-        <v-toolbar flat color="white">
+        <v-toolbar flat color="black">
           <v-toolbar-title>Usuarios</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="1000px">
+          <v-dialog v-model="dialog" max-width="1500px">
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"
                 >Novo Usuario</v-btn
               >
             </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
 
-              <v-card-text>
-                <Form />
-              </v-card-text>
+            <v-card-title>
+              <span class="headline">{{ formTitle }}</span>
+            </v-card-title>
 
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">Fechar</v-btn>
-                <v-btn color="blue darken-1" text @click="save">Salvar</v-btn>
-              </v-card-actions>
-            </v-card>
+            <Form />
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close">Fechar</v-btn>
+              <v-btn color="blue darken-1" text @click="save">Salvar</v-btn>
+            </v-card-actions>
           </v-dialog>
         </v-toolbar>
       </template>
