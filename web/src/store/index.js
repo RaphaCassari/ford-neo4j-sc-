@@ -4,12 +4,19 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
+    state: {
+        cpfUser: ''
+    },
+    getters: {
+        getCpfUser({ cpfUser }) {
+            return cpfUser;
+        },
+    },
+    mutations: {
+        setCpfUser(state, payload) {
+            state.cpfUser = payload;
+        },
+    },
+    actions: {},
+    modules: {}
 })

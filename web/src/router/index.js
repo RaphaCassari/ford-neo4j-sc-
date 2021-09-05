@@ -4,6 +4,7 @@ import Form from '../components/Form.vue'
 import viewCandidates from '../views/ViewCandidates.vue'
 import Courses from '../views/Courses.vue'
 import Login from '../views/login.vue'
+import Upload from '../components/upload.vue'
 
 Vue.use(VueRouter)
 
@@ -24,7 +25,16 @@ const routes = [{
     {
         path: '/viewCandidates',
         name: 'viewCandidates',
-        component: viewCandidates
+        component: viewCandidates,
+        /*         beforeEnter(to, from, next) {
+                    if (this.$store.getters["getCpfUser"]) {
+                        next()
+                    } else {
+                        next({
+                            name: "dashboard" // back to safety route //
+                        });
+                    }
+                } */
     },
     {
         path: '/courses',
@@ -35,6 +45,11 @@ const routes = [{
         path: '/form',
         name: 'Form',
         component: Form
+    },
+    {
+        path: '/upload',
+        name: 'Upload',
+        component: Upload
     }
 ]
 

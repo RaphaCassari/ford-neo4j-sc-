@@ -4,5 +4,6 @@ const express = require('express'),
     userController = new Usercontroller()
 
 router.post('/createMany', userController.createMany)
+router.post('/getByArea', userController.getByCpf)
 
 module.exports = router;

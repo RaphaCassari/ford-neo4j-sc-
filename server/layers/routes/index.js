@@ -9,9 +9,33 @@ const courseRoute = require('./course.routes');
 const MainController = require('../controllers/mainController')
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+let multer = require('multer');
+
+const cql = require('../queries/cql');
+const db = require('../database/qneo4j');
+const excel = require('../utils/excel')
+
+const tmpFolder = path.resolve(__dirname, '..', '..', 'tmp');
+let upload = multer({
+    directory: tmpFolder,
+    storage: multer.diskStorage({
+        destination: tmpFolder,
+        filename(_req, file, callback) {
+            //const filename = `${file.originalname}`;
+            const filename = `main.xlsx`;
+            return callback(null, filename);
+        },
+    }),
+});
+router.post('/upload', upload.array('file'), async(req, res) => {
+    excelData = await excel.split()
+    const { cypher, params } = cql.uploadPdfUsers(excelData)
+    const users = await db.execute({ cypher, params });
+    return res.json(users);
+});
 
 mainController = new MainController()
-
 
 router.use('/user', userRoute);
 router.use('/course', courseRoute)

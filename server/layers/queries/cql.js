@@ -18,10 +18,26 @@ class Cql {
         ];
     }
 
-    createUser(name, cpf, email, type, courses, languages) {
+    createDataBase() {
         return {
             cypher: `
-            CREATE (user:User {cpf: $cpf, name: $name, email: $email, type: $type})
+            UNWIND ["Candidato", "Funcionario", "Gestor"] as type
+            CREATE (t:Type {id: apoc.create.uuid(), name: type})
+            WITH t
+            UNWIND [""]`
+        }
+    }
+
+    createUser(name, email, password, cpf, type, area, courses, languages) {
+        return {
+            cypher: `
+            MERGE (user:User {name: $name, email: $email, password: $password, cpf: $cpf})
+            WITH user
+            MATCH (t:Type {name: $type})
+            CREATE (user) - [:IS] -> (t)
+            WITH user
+            MATCH (a:Area {name: $area})
+            CREATE (user) - [:PARTICIPATE] -> (a)
             WITH user
             UNWIND $courses as courseId
             MATCH (c:Course {id: courseId})
@@ -32,7 +48,17 @@ class Cql {
             CREATE (user) - [:SPEAK] -> (l)
             RETURN *
             `,
-            params: { name, cpf, email, type, courses, languages }
+            params: { name, email, password, cpf, type, area, courses, languages }
+        }
+    }
+
+    login(email, password) {
+        return {
+            cypher: `
+            MATCH (user:User {email: $email, password: $password}) -- (type:Type)
+            RETURN *
+            `,
+            params: { email, password }
         }
     }
 
@@ -68,10 +94,12 @@ class Cql {
     getUsers() {
         return {
             cypher: `
+            MATCH (user:User) -- (type:Type)
+            WITH user, type
             MATCH (user:User) - [:KNOW] -> (courses:Course)
-            WITH user, count(courses) as courses
+            WITH user, type,  count(courses) as courses
             MATCH (user) - [:SPEAK] -> (languages:Language)
-            RETURN user, courses, count(languages) as languages
+            RETURN user, type, courses, count(languages) as languages
           `,
         };
     }
@@ -85,36 +113,51 @@ class Cql {
         }
     }
 
+    uploadPdfUsers(users) {
+        return {
+            cypher: `
+                UNWIND $users as user
+                MERGE (u:User {name: user.name, email: user.email, cpf: user.cpf})
+                WITH u, user
+                UNWIND user.courses as course
+                MERGE (c:Course {name: course})
+                ON CREATE SET 
+                    c.id= apoc.create.uuid()
+                WITH u,c, user
+                MERGE (c) <- [:KNOW] - (u)
+                WITH u, user
+                UNWIND user.languages as language
+                MERGE (l:Language {name: language})
+                ON CREATE SET 
+                    l.id= apoc.create.uuid()
+                WITH u,l, user
+                MERGE (l) <- [:SPEAK] - (u)
+                WITH u, user
+                MERGE (a:Area {name: user.area})
+                ON CREATE SET 
+                    a.id= apoc.create.uuid()
+                WITH a,u, user
+                MERGE (a) <- [:PARTICIPATE] - (u)
+                WITH u, user
+                MERGE (t:Type {name: user.type})
+                ON CREATE SET 
+                    t.id= apoc.create.uuid()
+                WITH t,u, user
+                MERGE (t) <- [:IS] - (u)
+            `,
+            params: { users }
+        }
+    }
+
+    courseByArea(nameArea) {
+        return {
+            cypher: `
+            MATCH (courses:Course) -- () -- (a:Area {name: $nameArea})
+            RETURN courses`,
+            params: { nameArea }
+        }
+    }
+
 }
 
 module.exports = new Cql();
-
-/* 
-`
-MATCH (n:User {type:'Candidato'})
-WITH collect(n.cpf) AS cpfs
-unwind cpfs AS cpf
-
-MATCH (p1:User {cpf: cpf})-[:KNOW]->(Course)
-WITH p1, collect(id(Course)) AS p1Cuisine
-MATCH (p2:User {type:'Funcionario'})-[:KNOW]->(Course) WHERE p1 <> p2
-WITH p1,p1Cuisine, p2, collect(id(Course)) AS p2Cuisine
-WITH p1,p1Cuisine, p2, collect(id(Course)) AS p2Cuisine
-WITH p1, p2, gds.alpha.similarity.jaccard(p1Cuisine, p2Cuisine) AS similarity
-WITH p1, sum(similarity) as score, count(p2) as nfunc
-set p1.score = score/nfunc
-
-WITH p1
-MATCH (p1:User {cpf: cpf})-[:SPEAK]->(Language)
-WITH p1, collect(id(Language)) AS p1Cuisine
-MATCH (p2:User {type:'Funcionario'})-[:SPEAK]->(Language) WHERE p1 <> p2
-WITH p1,p1Cuisine, p2, collect(id(Language)) AS p2Cuisine
-WITH p1, p2, gds.alpha.similarity.jaccard(p1Cuisine, p2Cuisine) AS similarity
-WITH p1, sum(similarity) as score, count(p2) as nfunc
-set p1.score = score/nfunc
-
-
-return p1.name, p1.score ORDER by p1.score DESC
-
-
-` */

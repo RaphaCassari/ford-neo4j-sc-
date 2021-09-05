@@ -54,6 +54,7 @@
 
 <script>
 import { apiMain } from "../axios";
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
     name: "Courses",
@@ -78,6 +79,9 @@ export default {
   }),
 
   computed: {
+    ...mapGetters({
+      cpfUser: "getCpfUser",
+    }),
     formTitle() {
       return this.editedIndex === -1 ? "Novo Curso" : "Editar Curso";
     },
@@ -91,6 +95,7 @@ export default {
 
   async created() {
     this.courses = await apiMain.get({ labelName: "Course" });
+    console.log(this.cpfUser);
   },
 
   methods: {

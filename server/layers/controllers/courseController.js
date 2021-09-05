@@ -11,6 +11,13 @@ class CourseController {
         const courses = await db.execute({ cypher, params });
         return res.json(courses);
     }
+
+    async getByCpf(req, res) {
+        const { nameArea } = req.body
+        const { cypher, params } = cql.courseByArea(nameArea);
+        const courses = await db.execute({ cypher, params });
+        return res.json(courses);
+    }
 }
 
 module.exports = CourseController

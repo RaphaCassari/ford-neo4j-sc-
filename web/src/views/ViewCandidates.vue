@@ -81,7 +81,6 @@ export default {
   async created() {
     //this.initialize();
     this.usersData = await apiCand.get();
-    console.log(this.usersData);
   },
 
   methods: {

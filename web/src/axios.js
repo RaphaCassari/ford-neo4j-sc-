@@ -6,7 +6,6 @@ const api = axios.create({}),
 
 export const apiMain = {
     get: async(request) => {
-        console.log(request)
         try {
             const response = await api.post(
                 `${BASE_URL}/getLabel`,
@@ -20,6 +19,13 @@ export const apiMain = {
             return error
         }
     },
+    upload: async(request) => {
+        const response = await api.post(
+            `${BASE_URL}/upload`,
+            request
+        )
+        return response.data
+    }
 };
 
 export const apiCourses = {
@@ -34,6 +40,21 @@ export const apiCourses = {
             return error
         }
     },
+    getByArea: async(request) => {
+        try {
+            const response = await api.post(
+                `${BASE_URL}/course/getByArea`,
+                request
+            )
+            console.log(response.data)
+            return response.data.map((c) => ({
+                value: c.courses.id,
+                text: c.courses.name,
+            }));
+        } catch (error) {
+            return error
+        }
+    }
 };
 
 
@@ -45,7 +66,7 @@ export const apiCand = {
             )
             return response.data.map((c) => ({
                 name: c.user.name,
-                type: c.user.type,
+                type: c.type.name,
                 score: c.user.score,
                 courses: c.courses,
                 languages: c.languages
@@ -58,6 +79,17 @@ export const apiCand = {
         try {
             const response = await api.post(
                 `${BASE_URL}/user/create`,
+                request
+            )
+            return response.data;
+        } catch (error) {
+            return error
+        }
+    },
+    login: async({ request }) => {
+        try {
+            const response = await api.post(
+                `${BASE_URL}/user/login`,
                 request
             )
             return response.data;
