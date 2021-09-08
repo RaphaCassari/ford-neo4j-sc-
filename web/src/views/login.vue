@@ -19,23 +19,15 @@
                   <v-row>
                     <v-col cols="12" md="8">
                       <v-card-text class="mt-12">
-                        <h1 class="text-center display-2 teal--text text--blue">
-                          Logar com PhiBit
-                        </h1>
                         <div class="text-center mt-4">
-                          <v-btn class="mx-2" fab color="black" outlined>
-                            <v-icon>fab fa-facebook-f</v-icon>
-                          </v-btn>
-
-                          <v-btn class="mx-2" fab color="black" outlined>
-                            <v-icon>fab fa-google-plus-g</v-icon>
-                          </v-btn>
-                          <v-btn class="mx-2" fab color="black" outlined>
-                            <v-icon>fab fa-linkedin-in</v-icon>
-                          </v-btn>
+                          <v-img
+                            max-height="700"
+                            max-width="700"
+                            src="@/assets/images/sc-fiap.jpeg"
+                          ></v-img>
                         </div>
                         <h4 class="text-center mt-4">
-                          Faça Login com suas redes sociais
+                          Insira suas informações para logar.
                         </h4>
                         <v-form>
                           <v-text-field
@@ -50,7 +42,7 @@
                           <v-text-field
                             v-model="password"
                             id="password"
-                            label="Password"
+                            label="Senha"
                             name="password"
                             prepend-icon="mdi-lock"
                             type="password"
@@ -125,7 +117,7 @@
                               <v-form>
                                 <v-text-field
                                   v-model="name"
-                                  label="Name"
+                                  label="Nome"
                                   name="Name"
                                   prepend-icon="mdi-face"
                                   type="text"
@@ -143,7 +135,7 @@
                                 <v-text-field
                                   v-model="password"
                                   id="password"
-                                  label="Password"
+                                  label="Senha"
                                   name="password"
                                   prepend-icon="mdi-lock"
                                   type="password"
@@ -152,15 +144,13 @@
                                 <v-text-field
                                   v-model="cpf"
                                   label="CPF"
-                                  prepend-icon="mdi-document"
+                                  prepend-icon="mdi-pen"
                                   v-mask="'###.###.###-##'"
                                   required
                                 ></v-text-field>
                               </v-form>
 
                               <v-btn color="primary" @click="e1 = 2"> Continue </v-btn>
-
-                              <v-btn text> Cancel </v-btn>
                             </v-stepper-content>
 
                             <v-stepper-content step="2">
@@ -176,7 +166,7 @@
                                 <v-select
                                   v-model="userArea"
                                   :items="userAreas"
-                                  prepend-icon="mdi-face"
+                                  prepend-icon="mdi-switch"
                                   :rules="[(v) => !!v || 'Item is required']"
                                   label="Area"
                                   required
