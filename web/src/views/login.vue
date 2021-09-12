@@ -21,9 +21,9 @@
                       <v-card-text class="mt-12">
                         <div class="text-center mt-4">
                           <v-img
-                            max-height="700"
-                            max-width="700"
-                            src="@/assets/images/sc-fiap.jpeg"
+                            max-height="1500"
+                            max-width="1500"
+                            src="@/assets/images/sc-fiap2.png"
                           ></v-img>
                         </div>
                         <h4 class="text-center mt-4">

@@ -8,28 +8,58 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="black">
-          <v-toolbar-title>Usuarios</v-toolbar-title>
+          <v-toolbar-title>Area do Gestor</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="1500px">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"
-                >Novo Usuario</v-btn
-              >
-            </template>
+          <div class="text-center">
+            <v-dialog v-model="dialog" width="1500">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+                  Adicionar Usuario
+                </v-btn>
+              </template>
 
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
+              <v-card>
+                <v-card-title class="text-h5 grey lighten-2">
+                  Adicionar 1 novo usuario
+                </v-card-title>
 
-            <Form />
+                <Form />
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">Fechar</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Salvar</v-btn>
-            </v-card-actions>
-          </v-dialog>
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="dialog = false"> Fechar </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
+
+          <div class="text-center">
+            <v-dialog v-model="dialog2" width="500">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
+                  Upload em Massa
+                </v-btn>
+              </template>
+
+              <v-card>
+                <v-card-title class="text-h5 grey lighten-2">
+                  Upload em Massa via Planilha
+                </v-card-title>
+
+                <upload />
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="dialog2 = false"> Fechar </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
@@ -46,10 +76,13 @@
 <script>
 import { apiCand } from "../axios";
 import Form from "../components/Form.vue";
+import Upload from "../components/upload.vue";
+//import Upload from "../components/upload.vue";
 export default {
-  components: { Form },
+  components: { Form, Upload /* Upload */ },
   data: () => ({
     dialog: false,
+    dialog2: false,
     headers: [
       {
         text: "Nome",
@@ -79,7 +112,6 @@ export default {
   },
 
   async created() {
-    //this.initialize();
     this.usersData = await apiCand.get();
   },
 
@@ -96,17 +128,12 @@ export default {
         this.usersData.splice(index, 1);
     },
 
-    close() {
-      this.dialog = false;
-    },
-
     save() {
       if (this.editedIndex > -1) {
         Object.assign(this.usersData[this.editedIndex], this.editedItem);
       } else {
         this.usersData.push(this.editedItem);
       }
-      this.close();
     },
   },
 };

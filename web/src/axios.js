@@ -75,6 +75,17 @@ export const apiCand = {
             return error
         }
     },
+    getByCpf: async(request) => {
+        try {
+            const response = await api.post(
+                `${BASE_URL}/user/getByCpf`,
+                request
+            )
+            return response.data
+        } catch (error) {
+            return error
+        }
+    },
     create: async({ request }) => {
         try {
             const response = await api.post(

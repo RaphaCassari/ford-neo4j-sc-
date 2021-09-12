@@ -12,11 +12,20 @@ class UserController {
         return res.json(user);
     }
 
+    async getUserInfoByCpf(req, res) {
+        const { cpf } = req.body
+        const { cypher, params } = cql.getUserInfoByCpf(cpf);
+        const [userInfo] = await db.execute({ cypher, params });
+        return res.json(userInfo);
+    }
+
     async create(req, res) {
         const { name, email, password, cpf, type, area, courses, languages } = req.body
             //const { name, cpf, email } = fakeData.CandidateFake()
-        const { cypher, params } = cql.createUser(name, email, password, cpf, type, area, courses, languages);
+        let { cypher, params } = cql.createUser(name, email, password, cpf, type, area, courses, languages);
         const user = await db.execute({ cypher, params });
+        let cypher2 = { cypher } = cql.updateScore()
+        await db.execute({ cypher2 });
         return res.json(user);
     }
 
@@ -25,6 +34,11 @@ class UserController {
         const { cypher, params } = cql.login(email, password)
         const result = await db.execute({ cypher, params });
         return res.json(result);
+    }
+
+    async updateScore() {
+        const cypher2 = { cypher } = cql.updateScore()
+        await db.execute({ cypher2 });
     }
 }
 

@@ -46,7 +46,18 @@ class Cql {
             UNWIND $languages as languageId
             MATCH (l:Language {id: languageId})
             CREATE (user) - [:SPEAK] -> (l)
-            RETURN *
+
+            WITH l
+            MATCH (n:User {type:'Candidato'})
+            WITH collect(n.cpf) AS cpfs
+            unwind cpfs AS cpf
+            MATCH (p1:User {cpf:cpf})-[]->(i)
+            WITH p1, collect(id(i)) AS p1Cuisine
+            MATCH (p2:User {type:'Funcionario'})-[]->(j) WHERE p1 <> p2 AND p1.area = p2.area
+            WITH p1,p1Cuisine, p2, collect(id(j)) AS p2Cuisine
+            WITH p1, p2, gds.alpha.similarity.jaccard(p1Cuisine, p2Cuisine) AS similarity
+            WITH p1, sum(similarity) as score, count(p2) as nfunc
+            set p1.score = round(score/nfunc * 100, 1)
             `,
             params: { name, email, password, cpf, type, area, courses, languages }
         }
@@ -104,12 +115,16 @@ class Cql {
         };
     }
 
-    getUserById(userId) {
+    getUserInfoByCpf(cpf) {
         return {
             cypher: `
-            MATCH (u:User {id: $userId})
-            RETURN u `,
-            params: { userId }
+            MATCH (area:Area) -- (user:User {cpf: $cpf}) -- (type:Type)
+            WITH user,area,type
+            MATCH (user) -- (c:Course)
+            WITH user,area,type, collect(c) as courses
+            MATCH (user) -- (l:Language)
+            RETURN user,area,type, courses, collect(l) as languages `,
+            params: { cpf }
         }
     }
 
@@ -117,7 +132,7 @@ class Cql {
         return {
             cypher: `
                 UNWIND $users as user
-                MERGE (u:User {name: user.name, email: user.email, cpf: user.cpf})
+                MERGE (u:User {name: user.name, email: user.email, cpf: user.cpf, password:'default'})
                 WITH u, user
                 UNWIND user.courses as course
                 MERGE (c:Course {name: course})
@@ -155,6 +170,15 @@ class Cql {
             MATCH (courses:Course) -- () -- (a:Area {name: $nameArea})
             RETURN courses`,
             params: { nameArea }
+        }
+    }
+
+    updateScore() {
+        return {
+            cypher: `
+MATCH (n:User {type:'Candidato'})
+SET n.score = 10
+            `,
         }
     }
 

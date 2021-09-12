@@ -1,5 +1,13 @@
 <template>
   <v-container fluid>
+    <v-alert color="green" dismissible icon="mdi-account" type="success"
+      >Bem vindo <b>{{ userInfos.user.name }}</b
+      >.
+      <div v-if="userInfos.type.name === 'CANDIDATO'">
+        Analizamos suas competencias e recomendamos que faça o curso de Curso para
+        melhorar suas chances.
+      </div></v-alert
+    >
     <v-data-table
       :headers="headers"
       :items="courses"
@@ -8,13 +16,13 @@
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title>Cursos</v-toolbar-title>
+          <v-toolbar-title>Conhecimentos</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"
-                >Novo Curso</v-btn
+                >Adicionar Conhecimento</v-btn
               >
             </template>
             <v-card>
@@ -53,7 +61,7 @@
 </template>
 
 <script>
-import { apiMain } from "../axios";
+import { apiCand } from "../axios";
 import { mapGetters } from "vuex";
 export default {
   data: () => ({
@@ -64,11 +72,12 @@ export default {
         text: "Nome",
         align: "start",
         sortable: false,
-        value: "text",
+        value: "name",
       },
       { text: "Ações", value: "actions", sortable: false },
     ],
     courses: [],
+    userInfos: [],
     editedIndex: -1,
     editedItem: {
       name: "",
@@ -83,7 +92,7 @@ export default {
       cpfUser: "getCpfUser",
     }),
     formTitle() {
-      return this.editedIndex === -1 ? "Novo Curso" : "Editar Curso";
+      return this.editedIndex === -1 ? "Adicionar Conhecimento" : "Editar Curso";
     },
   },
 
@@ -94,19 +103,13 @@ export default {
   },
 
   async created() {
-    this.courses = await apiMain.get({ labelName: "Course" });
+    this.userInfos = await apiCand.getByCpf({ cpf: this.cpfUser });
+    this.courses = [...this.userInfos.courses, ...this.userInfos.languages];
+    console.log(this.userInfos);
     console.log(this.cpfUser);
   },
 
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "Frozen Yogurt",
-        },
-      ];
-    },
-
     editItem(item) {
       this.editedIndex = this.courses.indexOf(item);
       this.editedItem = Object.assign({}, item);

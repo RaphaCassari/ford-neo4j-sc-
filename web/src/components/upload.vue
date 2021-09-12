@@ -1,13 +1,17 @@
 <template>
-  <div>
+  <v-container fluid>
+    <v-alert dismissible icon="mdi-account" type="success" v-if="sucess"
+      >Enviado com Sucesso</v-alert
+    >
     <input type="file" name="file" multiple ref="files" />
-    <button @click="sendFile">Send</button>
-  </div>
+    <v-btn dark @click="sendFile">Enviar</v-btn>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: "App",
+  sucess: false,
   methods: {
     async sendFile() {
       let dataForm = new FormData();
@@ -20,6 +24,7 @@ export default {
       });
       let data = await res.json();
       console.log(data);
+      this.sucess = true;
     },
   },
 };
