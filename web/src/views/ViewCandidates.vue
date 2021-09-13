@@ -70,6 +70,55 @@
         <v-btn color="primary" @click="initialize">Reset</v-btn>
       </template>
     </v-data-table>
+    <br /><br /><br />
+    <v-alert color="green" icon="mdi-account" type="success">Visão Geral</v-alert>
+    <WCartesian :dataset="data1" :height="300" :bound="[0]" responsive>
+      <WBar datakey="one" :width="45" />
+      <WXAxis datakey="name" :space="[0, 50, 50, 50]" />
+      <WYAxis :space="[25, 0, 0, 50]" />
+    </WCartesian>
+    <v-container fluid>
+      <v-row justify="center">
+        <v-expansion-panels inset>
+          <v-expansion-panel>
+            <v-expansion-panel-header disable-icon-rotate>
+              Tecnologia
+              <template v-slot:actions>
+                <v-icon color="primary"> $expand </v-icon>
+              </template>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-alert color="green" icon="mdi-account" type="success"
+                >Visão Geral - Tecnologia</v-alert
+              >
+              <WCartesian :dataset="data1" :height="300" :bound="[0]" responsive>
+                <WBar datakey="one" :width="45" />
+                <WXAxis datakey="name" :space="[0, 50, 50, 50]" />
+                <WYAxis :space="[25, 0, 0, 50]" />
+              </WCartesian>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header disable-icon-rotate>
+              Marketing
+              <template v-slot:actions>
+                <v-icon color="primary"> $expand </v-icon>
+              </template>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-alert color="green" icon="mdi-account" type="success"
+                >Visão Geral - Marketing</v-alert
+              >
+              <WCartesian :dataset="data1" :height="300" :bound="[0]" responsive>
+                <WBar datakey="one" :width="45" />
+                <WXAxis datakey="name" :space="[0, 50, 50, 50]" />
+                <WYAxis :space="[25, 0, 0, 50]" />
+              </WCartesian>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
@@ -79,8 +128,22 @@ import Form from "../components/Form.vue";
 import Upload from "../components/upload.vue";
 //import Upload from "../components/upload.vue";
 export default {
-  components: { Form, Upload /* Upload */ },
+  components: { Form, Upload },
   data: () => ({
+    data1: [
+      {
+        name: "Candidatos",
+        one: 1,
+      },
+      {
+        name: "Funcionarios",
+        one: 2,
+      },
+      {
+        name: "Gestores",
+        one: 1,
+      },
+    ],
     dialog: false,
     dialog2: false,
     headers: [
@@ -102,6 +165,9 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "Novo Usuario" : "Editar Usuario";
+    },
+    total() {
+      return this.data.reduce((acc, item) => acc + item.one, 0);
     },
   },
 

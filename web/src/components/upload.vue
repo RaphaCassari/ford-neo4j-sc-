@@ -18,7 +18,7 @@ export default {
       for (let file of this.$refs.files.files) {
         dataForm.append(`file`, file);
       }
-      let res = await fetch(`http://localhost:3000/upload`, {
+      let res = await fetch(`https://api-shopping-cidadao-2.herokuapp.com/upload`, {
         method: "POST",
         body: dataForm,
       });

@@ -1,5 +1,6 @@
 module.exports = {
-  transpileDependencies: [
-    'vuetify'
-  ]
+    transpileDependencies: [
+        'vuetify',
+        /\/node_modules\/vue-wcharts\//,
+    ]
 }

@@ -4,8 +4,8 @@
       >Bem vindo <b>{{ userInfos.user.name }}</b
       >.
       <div v-if="userInfos.type.name === 'CANDIDATO'">
-        Analizamos suas competencias e recomendamos que faça o curso de Curso para
-        melhorar suas chances.
+        Analizamos suas competencias e recomendamos que faça o curso de
+        <b>{{ userInfos.user.recommendation[0] }}</b> para melhorar suas chances.
       </div></v-alert
     >
     <v-data-table

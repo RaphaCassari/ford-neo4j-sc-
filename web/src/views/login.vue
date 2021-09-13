@@ -206,7 +206,7 @@
                                 @click="submit"
                                 :disabled="formIsInvalid"
                               >
-                                Continue
+                                Enviar
                               </v-btn>
 
                               <v-btn text @click="e1 = 2"> Voltar </v-btn>
