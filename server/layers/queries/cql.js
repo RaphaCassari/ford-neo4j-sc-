@@ -159,6 +159,8 @@ class Cql {
                     t.id= apoc.create.uuid()
                 WITH t,u, user
                 MERGE (t) <- [:IS] - (u)
+            
+
             `,
             params: { users }
         }
