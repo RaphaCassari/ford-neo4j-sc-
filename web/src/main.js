@@ -5,8 +5,8 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import VueMask from 'v-mask';
 
-import WCharts from 'vue-wcharts'
-Vue.use(WCharts)
+//import WCharts from 'vue-wcharts'
+//Vue.use(WCharts)
 
 Vue.use(VueMask);
 
