@@ -18,17 +18,7 @@ class Cql {
         ];
     }
 
-    createDataBase() {
-        return {
-            cypher: `
-            UNWIND ["Candidato", "Funcionario", "Gestor"] as type
-            CREATE (t:Type {id: apoc.create.uuid(), name: type})
-            WITH t
-            UNWIND [""]`
-        }
-    }
-
-    createUser(name, email, password, cpf, type, area, courses, languages) {
+    createUser(name, email, password, cpf, type, areaId, courses, languages) {
         return {
             cypher: `
             MERGE (user:User {name: $name, email: $email, password: $password, cpf: $cpf})
@@ -36,7 +26,7 @@ class Cql {
             MATCH (t:Type {name: $type})
             CREATE (user) - [:IS] -> (t)
             WITH user
-            MATCH (a:Area {name: $area})
+            MATCH (a:Area {id: $areaId})
             CREATE (user) - [:PARTICIPATE] -> (a)
             WITH user
             UNWIND $courses as courseId
@@ -47,19 +37,27 @@ class Cql {
             MATCH (l:Language {id: languageId})
             CREATE (user) - [:SPEAK] -> (l)
 
+            
             WITH l
-            MATCH (n:User {type:'Candidato'})
+            MATCH (Candidato {name: 'CANDIDATO'})<-[:IS]-(n:User)
             WITH collect(n.cpf) AS cpfs
             unwind cpfs AS cpf
-            MATCH (p1:User {cpf:cpf})-[]->(i)
-            WITH p1, collect(id(i)) AS p1Cuisine
-            MATCH (p2:User {type:'Funcionario'})-[]->(j) WHERE p1 <> p2 AND p1.area = p2.area
-            WITH p1,p1Cuisine, p2, collect(id(j)) AS p2Cuisine
-            WITH p1, p2, gds.alpha.similarity.jaccard(p1Cuisine, p2Cuisine) AS similarity
-            WITH p1, sum(similarity) as score, count(p2) as nfunc
-            set p1.score = round(score/nfunc * 100, 1)
+            with cpf
+            MATCH (p1:User {cpf:cpf})-[:LANGUAGES|:KNOW]->(i)
+            WITH cpf,p1, collect(id(i)) AS p1Cuisine
+            match (p1)-[:PARTICIPATE]-(n)
+            with n,cpf,p1,p1Cuisine
+            MATCH (Funcionario {name: 'FUNCIONARIO'})<-[]-(p2:User)-[]->(j), (p2)-[:PARTICIPATE]-(m) WHERE p1 <> p2 AND n = m 
+            WITH n,cpf,p1,p1Cuisine, p2, collect(id(j)) AS p2Cuisine
+            WITH n,cpf,p1, p2, gds.alpha.similarity.jaccard(p1Cuisine, p2Cuisine) AS similarity
+            WITH n,cpf,p1, sum(similarity) as score, count(p2) as nfunc
+            OPTIONAL MATCH (Funcionario {name: 'FUNCIONARIO'})<-[]-(p2:User)-[:LANGUAGES|:KNOW]->(w),(p1:User {cpf:cpf}),(p2)-[:PARTICIPATE]-(m) WHERE p1 <> p2 AND n = m and NOT (w)<-[]-(p1)
+            WITH p1,score,nfunc,collect(distinct w.name) as recommendation
+            CALL apoc.when(recommendation = [],'RETURN 100.0 AS status','RETURN round(score/nfunc * 100, 1) AS status',{score:score,nfunc:nfunc}) YIELD value
+            set p1.score = value.status
+            set p1.recommendation = recommendation
             `,
-            params: { name, email, password, cpf, type, area, courses, languages }
+            params: { name, email, password, cpf, type, areaId, courses, languages }
         }
     }
 
@@ -159,27 +157,83 @@ class Cql {
                     t.id= apoc.create.uuid()
                 WITH t,u, user
                 MERGE (t) <- [:IS] - (u)
-            
 
+
+                WITH u
+
+                MATCH (Candidato {name: 'CANDIDATO'})<-[:IS]-(n:User)
+                WITH collect(n.cpf) AS cpfs
+                unwind cpfs AS cpf
+                with cpf
+                MATCH (p1:User {cpf:cpf})-[:LANGUAGES|:KNOW]->(i)
+                WITH cpf,p1, collect(id(i)) AS p1Cuisine
+                match (p1)-[:PARTICIPATE]-(n)
+                with n,cpf,p1,p1Cuisine
+                MATCH (Funcionario {name: 'FUNCIONARIO'})<-[]-(p2:User)-[]->(j), (p2)-[:PARTICIPATE]-(m) WHERE p1 <> p2 AND n = m 
+                WITH n,cpf,p1,p1Cuisine, p2, collect(id(j)) AS p2Cuisine
+                WITH n,cpf,p1, p2, gds.alpha.similarity.jaccard(p1Cuisine, p2Cuisine) AS similarity
+                WITH n,cpf,p1, sum(similarity) as score, count(p2) as nfunc
+                OPTIONAL MATCH (Funcionario {name: 'FUNCIONARIO'})<-[]-(p2:User)-[:LANGUAGES|:KNOW]->(w),(p1:User {cpf:cpf}),(p2)-[:PARTICIPATE]-(m) WHERE p1 <> p2 AND n = m and NOT (w)<-[]-(p1)
+                WITH p1,score,nfunc,collect(distinct w.name) as recommendation
+                CALL apoc.when(recommendation = [],'RETURN 100.0 AS status','RETURN round(score/nfunc * 100, 1) AS status',{score:score,nfunc:nfunc}) YIELD value
+                set p1.score = value.status
+                set p1.recommendation = recommendation
+
+                WITH p1
+
+                MATCH (Funcionario {name: 'FUNCIONARIO'})<-[:IS]-(n:User)
+                WITH collect(n.cpf) AS cpfs
+                unwind cpfs AS cpf
+                with cpf
+                MATCH (p2:User {cpf:cpf})-[:LANGUAGES|:KNOW]->(j)
+                WITH p2,cpf, collect(id(j)) AS p2Cuisine
+                match (p2)-[:PARTICIPATE]-(m)
+                with m,cpf,p2,p2Cuisine
+                MATCH (Funcionario {name: 'FUNCIONARIO'})<-[]-(p3:User)-[:PARTICIPATE]->(:Area {name:m.name}),(p3)-[:LANGUAGES|:KNOW]->(k)
+                with p2,collect(distinct id(k)) as p3Cuisine,m,cpf,p2Cuisine
+                WITH m,cpf,p2, gds.alpha.similarity.jaccard(p2Cuisine, p3Cuisine) AS similarity
+                OPTIONAL MATCH (Funcionario {name: 'FUNCIONARIO'})<-[]-(p3:User)-[:PARTICIPATE]->(:Area {name:m.name}),(p3)-[:LANGUAGES|:KNOW]->(k) WHERE NOT (k)<-[]-(p2)
+                WITH p2,similarity as score,collect(distinct k.name) as recommendation
+                CALL apoc.when(recommendation = [],'RETURN 100.0 AS status','RETURN round(score * 100, 1) AS status',{score:score}) YIELD value
+                set p2.score = value.status
             `,
             params: { users }
         }
     }
 
-    courseByArea(nameArea) {
+    courseByArea(areaId) {
         return {
             cypher: `
-            MATCH (courses:Course) -- () -- (a:Area {name: $nameArea})
+            MATCH (courses:Course) -- () -- (a:Area {id: $areaId})
             RETURN courses`,
-            params: { nameArea }
+            params: { areaId }
         }
     }
+
+
 
     updateScore() {
         return {
             cypher: `
-MATCH (n:User {type:'Candidato'})
-SET n.score = 10
+            MATCH (uc:User {cpf:'224.324.324-28'}) -- (a:Area)
+            with uc,a
+
+            MATCH (t:Type {name:"FUNCIONARIO"}) -- (uf) -- (a)
+            WITH collect(uf) as funcionarios, uc
+
+            UNWIND funcionarios as funcionario
+            MATCH (funcionario) -- (c:Course) -- (uc)
+            with count(c) as courses, funcionario, uc
+
+            MATCH (funcionario) -- (l:Language) -- (uc)
+            WITH (count(l)+courses) as simi, funcionario, uc
+
+            match (funcionario) -- (c:Course)
+            with count(c) as courses, simi, funcionario, uc
+            match (funcionario) -- (l:Language)
+
+            with (simi*1.0/(count(l)+courses)) as score, uc
+            set uc.score = score
             `,
         }
     }

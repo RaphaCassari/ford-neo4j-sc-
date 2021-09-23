@@ -40,6 +40,7 @@ mainController = new MainController()
 router.use('/user', userRoute);
 router.use('/course', courseRoute)
 router.post('/getLabel', mainController.getLabel);
+router.get('/graphInfos', mainController.getGraphInfos)
 
 router.get('/', function(req, res, next) {
     res.status(200).send({

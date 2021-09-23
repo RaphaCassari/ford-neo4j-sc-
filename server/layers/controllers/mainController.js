@@ -9,8 +9,11 @@ class MainController {
         return res.json(label);
     }
 
-    async get(req, res) {
-        res.status(201).send('Requisição GET recebida com sucesso!');
+    async getGraphInfos(req, res) {
+        const { cypher } = cql.getGraphInfos()
+        const result = await db.execute({ cypher });
+        return res.json(result);
+
     }
 
     async post(req, res, next) {

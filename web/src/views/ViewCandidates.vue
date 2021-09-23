@@ -72,13 +72,13 @@
     </v-data-table>
     <br /><br /><br />
     <v-alert color="green" icon="mdi-account" type="success">Visão Geral</v-alert>
-    <WCartesian :dataset="data1" :height="300" :bound="[0]" responsive>
-      <WBar datakey="one" :width="45" />
-      <WXAxis datakey="name" :space="[0, 50, 50, 50]" />
-      <WYAxis :space="[25, 0, 0, 50]" />
-    </WCartesian>
+    <apex-simple-pie />
+    <v-alert color="green" icon="mdi-account" type="success"
+      >Score médio por area</v-alert
+    >
+    <apex-column />
     <v-container fluid>
-      <v-row justify="center">
+      <v-row>
         <v-expansion-panels inset>
           <v-expansion-panel>
             <v-expansion-panel-header disable-icon-rotate>
@@ -91,11 +91,13 @@
               <v-alert color="green" icon="mdi-account" type="success"
                 >Visão Geral - Tecnologia</v-alert
               >
-              <WCartesian :dataset="data1" :height="300" :bound="[0]" responsive>
-                <WBar datakey="one" :width="45" />
-                <WXAxis datakey="name" :space="[0, 50, 50, 50]" />
-                <WYAxis :space="[25, 0, 0, 50]" />
-              </WCartesian>
+              <apex-simple-pie />
+            </v-expansion-panel-content>
+            <v-expansion-panel-content>
+              <v-alert color="green" icon="mdi-account" type="success"
+                >Distribuição dos Conhecimentos - Tecnologia</v-alert
+              >
+              <apex-treemap />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -109,11 +111,7 @@
               <v-alert color="green" icon="mdi-account" type="success"
                 >Visão Geral - Marketing</v-alert
               >
-              <WCartesian :dataset="data1" :height="300" :bound="[0]" responsive>
-                <WBar datakey="one" :width="45" />
-                <WXAxis datakey="name" :space="[0, 50, 50, 50]" />
-                <WYAxis :space="[25, 0, 0, 50]" />
-              </WCartesian>
+              <apex-simple-pie />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -124,26 +122,15 @@
 
 <script>
 import { apiCand } from "../axios";
+import ApexColumn from "../components/apexColumn.vue";
+import ApexSimplePie from "../components/apexSimplePie.vue";
+import ApexTreemap from "../components/apexTreemap.vue";
 import Form from "../components/Form.vue";
 import Upload from "../components/upload.vue";
 //import Upload from "../components/upload.vue";
 export default {
-  components: { Form, Upload },
+  components: { Form, Upload, ApexColumn, ApexSimplePie, ApexTreemap },
   data: () => ({
-    data1: [
-      {
-        name: "Candidatos",
-        one: 1,
-      },
-      {
-        name: "Funcionarios",
-        one: 2,
-      },
-      {
-        name: "Gestores",
-        one: 1,
-      },
-    ],
     dialog: false,
     dialog2: false,
     headers: [

@@ -235,7 +235,7 @@ export default {
     step: 1,
     e1: 1,
     userTypes: ["CANDIDATO", "FUNCIONARIO", "GESTOR"],
-    userAreas: ["GERAL", "TECNOLOGIA", "MARKETING"],
+    userAreas: [],
     userType: "",
     userArea: "",
     name: "",
@@ -257,7 +257,7 @@ export default {
         password: this.password,
         cpf: this.cpf,
         type: this.userType,
-        area: this.userArea,
+        areaId: this.userArea,
         courses: this.coursesId,
         languages: this.languagesId,
       };
@@ -283,6 +283,7 @@ export default {
   },
   async created() {
     this.languages = await apiMain.get({ labelName: "Language" });
+    this.userAreas = await apiMain.get({ labelName: "Area" });
   },
   computed: {
     formIsInvalid() {
@@ -295,7 +296,7 @@ export default {
   },
   watch: {
     async userArea() {
-      this.courses = await apiCourses.getByArea({ nameArea: this.userArea });
+      this.courses = await apiCourses.getByArea({ areaId: this.userArea });
     },
   },
 };

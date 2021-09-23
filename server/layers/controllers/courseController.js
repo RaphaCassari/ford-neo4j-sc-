@@ -13,8 +13,8 @@ class CourseController {
     }
 
     async getByCpf(req, res) {
-        const { nameArea } = req.body
-        const { cypher, params } = cql.courseByArea(nameArea);
+        const { areaId } = req.body
+        const { cypher, params } = cql.courseByArea(areaId);
         const courses = await db.execute({ cypher, params });
         return res.json(courses);
     }
