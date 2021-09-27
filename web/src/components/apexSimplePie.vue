@@ -12,9 +12,12 @@
 <script>
 export default {
   name: "ApexSimplePie",
+  props: {
+    series: Array,
+  },
   data() {
     return {
-      series: [7, 5, 2],
+      /*  series: [7, 5, 2], */
       chartOptions: {
         chart: {
           width: 350,

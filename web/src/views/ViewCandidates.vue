@@ -18,16 +18,12 @@
                   Adicionar Usuario
                 </v-btn>
               </template>
-
               <v-card>
                 <v-card-title class="text-h5 grey lighten-2">
                   Adicionar 1 novo usuario
                 </v-card-title>
-
                 <Form />
-
                 <v-divider></v-divider>
-
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="primary" text @click="dialog = false"> Fechar </v-btn>
@@ -35,7 +31,6 @@
               </v-card>
             </v-dialog>
           </div>
-
           <div class="text-center">
             <v-dialog v-model="dialog2" width="500">
               <template v-slot:activator="{ on, attrs }">
@@ -43,16 +38,12 @@
                   Upload em Massa
                 </v-btn>
               </template>
-
               <v-card>
                 <v-card-title class="text-h5 grey lighten-2">
                   Upload em Massa via Planilha
                 </v-card-title>
-
                 <upload />
-
                 <v-divider></v-divider>
-
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="primary" text @click="dialog2 = false"> Fechar </v-btn>
@@ -72,7 +63,7 @@
     </v-data-table>
     <br /><br /><br />
     <v-alert color="green" icon="mdi-account" type="success">Visão Geral</v-alert>
-    <apex-simple-pie />
+    <apex-simple-pie :series="seriesSimplePie" />
     <v-alert color="green" icon="mdi-account" type="success"
       >Score médio por area</v-alert
     >
@@ -121,18 +112,18 @@
 </template>
 
 <script>
-import { apiCand } from "../axios";
+import { apiCand, apiCourses } from "../axios";
 import ApexColumn from "../components/apexColumn.vue";
 import ApexSimplePie from "../components/apexSimplePie.vue";
 import ApexTreemap from "../components/apexTreemap.vue";
 import Form from "../components/Form.vue";
 import Upload from "../components/upload.vue";
-//import Upload from "../components/upload.vue";
 export default {
   components: { Form, Upload, ApexColumn, ApexSimplePie, ApexTreemap },
   data: () => ({
     dialog: false,
     dialog2: false,
+    seriesSimplePie: [5, 2, 1],
     headers: [
       {
         text: "Nome",
@@ -166,6 +157,7 @@ export default {
 
   async created() {
     this.usersData = await apiCand.get();
+    this.seriesSimplePie = Object.values(await apiCourses.getGraphInfos());
   },
 
   methods: {

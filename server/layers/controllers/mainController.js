@@ -11,7 +11,7 @@ class MainController {
 
     async getGraphInfos(req, res) {
         const { cypher } = cql.getGraphInfos()
-        const result = await db.execute({ cypher });
+        const [result] = await db.execute({ cypher });
         return res.json(result);
 
     }

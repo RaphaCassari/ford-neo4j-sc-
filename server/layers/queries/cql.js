@@ -37,7 +37,7 @@ class Cql {
             MATCH (l:Language {id: languageId})
             CREATE (user) - [:SPEAK] -> (l)
 
-            
+
             WITH l
             MATCH (Candidato {name: 'CANDIDATO'})<-[:IS]-(n:User)
             WITH collect(n.cpf) AS cpfs
@@ -207,6 +207,19 @@ class Cql {
             MATCH (courses:Course) -- () -- (a:Area {id: $areaId})
             RETURN courses`,
             params: { areaId }
+        }
+    }
+
+    getGraphInfos() {
+        return {
+            cypher: `
+            match (t1:Type {name:"FUNCIONARIO"}) -- (f) 
+            with count(f) as funcs 
+            match (t2:Type {name:"CANDIDATO"}) -- (c) 
+            with funcs, count(c)as cands 
+            match (t3:Type {name:"GESTOR"}) -- (g) 
+            return funcs, cands, count(g) as gents
+            `
         }
     }
 
